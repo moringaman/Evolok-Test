@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="registration" >
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-cookie/4.1.0/angular-cookie.min.js"></script>
+    <script src="script.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+
+<body>
+
+    
+    <div ng-controller="myModalCtrl as vm" style="margin-top: 200px; border-radius: 10px; color: #fff; padding: 2rem; background: url('./assets/backdrop.png'); background-repeat: no-repeat; text-align: center; margin-left: 50vw; transform: translateX(-50%)">
+            <h1>Evolok Registration</h1>
+        <script type="text/ng-template" id="myModalContent.html">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Register An Account
+                </h3>
+                <div class="modal-body">
+                    <form action="" name="form">
+                            <div class="form-group" ng-class="{ 'has-error' : form.username.$invalid && !form.username.$pristine }">
+                                <label for="username">Username*</label>
+                                <input 
+                                 ng-model="user.username"
+                                 ngModel 
+                                 id="username"
+                                 type="text" 
+                                 name="username"
+                                 ng-blur="log(user.username)" 
+                                 class="form-control" 
+                                 placeholder="username"
+                                 required ng-minlength=3 ng-maxlength=20 ng-pattern="/^[a-zA-Z0-9]+$/">
+                                 <div ng-show="form.username.$dirty && form.username.$invalid">
+                                        <p ng-show="form.username.$error.required" class="help-block">A username is required.</p>
+                                        <p ng-show="form.username.$error.minlength" class="help-block">Your username must be greater than 3 characters.</p>
+                                        <p ng-show="form.username.$error.maxlength" class="help-block">Your username be less than 20 characters.</p>
+                                        <p ng-show="form.username.$error.pattern" class="help-block">Only alphabets please.</p>
+                                      </div>
+                                Output: {{ user.username }}
+                            </div>
+                            <div class="form-group" required ng-class="{ 'has-error' : form.email.$invalid && !form.email.$pristine }">
+                                    <label for="email">Email*</label>
+                                    <input ng-model="user.email" name="email" id="email" type="email" class="form-control" placeholder="email">
+                                    <div ng-show="form.email.$error.email" class="help-block">That is not a valid email.</div>
+                                </div>
+                            <div class="form-group" required ng-class="{ 'has-error' : form.password1.$invalid && !form.password1.$pristine }">
+                                    <label for="password1">Password*</label>
+                                    <input required ng-minlength=5 name="password1" ng-model="user.password1" type="text" class="form-control" placeholder="password">
+                                    <div ng-show="form.password1.$dirty && form.password1.$invalid">
+                                            <p ng-show="form.password1.$error.required" class="help-block">A password is required.</p>
+                                            <p ng-show="form.password1.$error.minlength" class="help-block">Your password must be greater than 3 characters.</p>
+                                            <p ng-show="form.password1.$error.pattern" class="help-block">Only alphabets please.</p>
+                                          </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                    <label for="password2">Confirm Password*</label>
+                                    <input required name="password2" ng-model="user.password2" type="text" class="form-control" placeholder="password" ng-blur="pwdCheck()">
+                                    {{ user.password2 }}
+                                </div>
+
+                                <div class="form-group" required ng-class="{ 'has-error' : form.address1.$invalid && !form.address1.$pristine }">
+                                    <label for="address1">Address1*</label>
+                                    <input ng-model="user.address1" type="text" name="address1" class="form-control" placeholder="address1" required>
+                                </div>
+                                <div class="form-group" required ng-class="{ 'has-error' : form.address2.$invalid && !form.address2.$pristine }">
+                                        <label for="address2">Address2</label>
+                                        <input ng-model="user.address2" type="text" name="address2" class="form-control" placeholder="address2">
+                                    </div>
+                                    <div class="form-group" required ng-class="{ 'has-error' : form.town.$invalid && !form.town.$pristine }">
+                                        <label for="town">Town*</label>
+                                        <input ng-model="user.town" type="text" name="town" class="form-control" placeholder="town/city" required>
+                                    </div>
+                                    <div class="form-group" required ng-class="{ 'has-error' : form.county.$invalid && !form.county.$pristine }">
+                                            <label for="town">County*</label>
+                                            <input ng-model="user.county" type="text" name="county" class="form-control" placeholder="county" required>
+                                        </div>
+                                    <div class="form-group" required ng-class="{ 'has-error' : form.zip.$invalid && !form.zip.$pristine }">
+                                            <label for="zip">Postcode*</label>
+                                            <input ng-model="user.zip" type="text" name="zip" class="form-control" required>
+                                        </div>
+                                
+                                            <div class="form-group" required ng-class="{ 'has-error' : form.tel.$invalid && !form.tel.$pristine }">
+                                                    <label for="tel">Telephone*</label>
+                                                    <input ng-model="user.tel" type="text" name="tel" class="form-control" ng-blur="complete()" required>
+                                                </div>
+                            <button ng-show="complete === true" class="btn btn-primary" ng-disabled="form.$invalid || errorMessage" ng-click="submitForm()">SUBMIT</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" ng-click="close()"> Close</button>
+                    <button class="btn btn-primary" ng-click="cancel()">Cancel</button>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/ng-template" id="loginModal.html">
+            <div class="modal-header">
+                <h2 class="modal-title">Please Login</h2>
+            </div>
+            <div class="modal-body">
+               <form action="">
+                    <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" name="password" ng-model="username" value="username" class="form-control">
+                        </div>
+                   <div class="form-group">
+                       <label for="password">Password</label>
+                       <input type="text" name="password" ng-model="password" value="pass" class="form-control">
+                   </div>
+                   <button class="btn btn-primary">Login</button>
+               </form>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </script>
+        <button style="margin-top: 50%" class="btn btn-default" ng-click="open()">Register Account</button>
+    </div>
+</body>
+
+</html>
